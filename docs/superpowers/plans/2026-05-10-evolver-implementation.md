@@ -40,12 +40,12 @@
 ### Task 3: Core Domain And Problem Spec
 
 **Files:**
-- Create: `src/evolver/spec.py`
-- Create: `src/evolver/types.py`
-- Create: `src/evolver/problems/levenshtein/problem.yaml`
-- Create: `src/evolver/problems/levenshtein/baseline.py`
-- Create: `src/evolver/problems/levenshtein/tests/test_correctness.py`
-- Create: `src/evolver/problems/levenshtein/benchmark.py`
+- Create: `evolver/spec.py`
+- Create: `evolver/types.py`
+- Create: `evolver/problems/levenshtein/problem.yaml`
+- Create: `evolver/problems/levenshtein/baseline.py`
+- Create: `evolver/problems/levenshtein/tests/test_correctness.py`
+- Create: `evolver/problems/levenshtein/benchmark.py`
 
 - [ ] Implement typed domain models and problem loading.
 - [ ] Add the packaged Levenshtein problem.
@@ -55,9 +55,9 @@
 ### Task 4: Safety Scanner, Sandbox Runner, And Benchmark Parser
 
 **Files:**
-- Create: `src/evolver/scanner.py`
-- Create: `src/evolver/runner.py`
-- Create: `src/evolver/benchmarking.py`
+- Create: `evolver/scanner.py`
+- Create: `evolver/runner.py`
+- Create: `evolver/benchmarking.py`
 
 - [ ] Implement AST safety scanning.
 - [ ] Implement isolated run directories, subprocess timeouts, resource limits, and command capture.
@@ -68,10 +68,10 @@
 ### Task 5: Archive, Candidate Generation, Selection, And Scoring
 
 **Files:**
-- Create: `src/evolver/archive.py`
-- Create: `src/evolver/generators.py`
-- Create: `src/evolver/selection.py`
-- Create: `src/evolver/scoring.py`
+- Create: `evolver/archive.py`
+- Create: `evolver/generators.py`
+- Create: `evolver/selection.py`
+- Create: `evolver/scoring.py`
 
 - [ ] Implement SQLite lineage archive.
 - [ ] Implement deterministic library generator and extensible generator protocol.
@@ -82,9 +82,9 @@
 ### Task 6: Evolution Engine And Evidence Reports
 
 **Files:**
-- Create: `src/evolver/engine.py`
-- Create: `src/evolver/reports.py`
-- Create: `src/evolver/environment.py`
+- Create: `evolver/engine.py`
+- Create: `evolver/reports.py`
+- Create: `evolver/environment.py`
 
 - [ ] Implement the closed loop run.
 - [ ] Write `run_spec.json`, `environment.json`, `best_solution.py`, `summary.json`, and `report.html`.
@@ -95,8 +95,8 @@
 ### Task 7: CLI, Documentation, And Final Verification
 
 **Files:**
-- Create: `src/evolver/cli.py`
-- Create: `src/evolver/__init__.py`
+- Create: `evolver/cli.py`
+- Create: `evolver/__init__.py`
 - Create: `docs/architecture.md`
 - Create: `docs/evidence.md`
 
@@ -114,4 +114,3 @@
 - [ ] Deploy with Wrangler to the live Worker.
 - [ ] Verify the Worker preview and custom domain independently.
 - [ ] Commit any project repo documentation link update if needed and push.
-

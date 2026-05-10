@@ -6,7 +6,7 @@ The project is meant to be read as a research system. It stores the evidence tha
 
 ## What It Does
 
-Evolver takes a problem directory with a baseline implementation, tests, and a benchmark. It generates candidate implementations, runs them in isolated workspaces, rejects unsafe code, scores only candidates that pass correctness, archives the full lineage in SQLite, then writes a reproducible evidence bundle.
+Evolver takes a problem directory with a baseline implementation, tests, and a benchmark. It generates candidate implementations, runs them in isolated workspaces, rejects unsafe code, scores only candidates that pass correctness, archives the full lineage in SQLite, then writes a reproducible evidence bundle. Each new candidate is linked to the best passing candidate measured so far, so the search trace is driven by evidence rather than by unverified generations.
 
 ```text
 problem spec
@@ -68,8 +68,8 @@ evolver list-problems
 ## Repository Layout
 
 ```text
-src/evolver/              core package
-src/evolver/problems/     packaged research problems
+evolver/                  core package
+evolver/problems/         packaged research problems
 tests/                    behavioral and end to end tests
 docs/                     design, architecture, and evidence notes
 ```
@@ -77,4 +77,3 @@ docs/                     design, architecture, and evidence notes
 ## License
 
 MIT
-

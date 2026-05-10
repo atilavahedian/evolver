@@ -31,6 +31,8 @@ strategy
 
 That is enough to reconstruct lineage.
 
+During a run, each new candidate is attached to the best passing candidate known so far. This makes the local deterministic run evidence guided: later candidates inherit from measured winners rather than from unverified proposals.
+
 ## Verification Runtime
 
 `SandboxRunner` scans source before execution. Accepted candidates are copied into fresh workspaces under the run directory. Tests execute before benchmarks. A candidate with failing tests never receives a performance score.
@@ -70,4 +72,3 @@ verification.json
 ```
 
 `verify` reruns the winning source from `best_solution.py` against the original problem.
-

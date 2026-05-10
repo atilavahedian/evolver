@@ -36,11 +36,11 @@ dev = [
 evolver = "evolver.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/evolver"]
+packages = ["evolver"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["."]
 addopts = "-q"
 
 [tool.ruff]

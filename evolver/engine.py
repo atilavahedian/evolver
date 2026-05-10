@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -49,20 +50,23 @@ def run_evolution(
     archive.record_candidate(baseline_record)
 
     generator = LibraryGenerator()
+    best_so_far = baseline_record
     for draft in generator.generate(problem, attempts):
+        draft = replace(draft, parent_id=best_so_far.candidate_id)
         evaluation = runner.evaluate(draft.candidate_id, draft.source)
         score = score_evaluation(baseline_eval.stats, evaluation, draft.source)
-        archive.record_candidate(
-            CandidateRecord(
-                candidate_id=draft.candidate_id,
-                parent_id=draft.parent_id,
-                generation=draft.generation,
-                source=draft.source,
-                strategy=draft.strategy,
-                evaluation=evaluation,
-                score=score,
-            )
+        record = CandidateRecord(
+            candidate_id=draft.candidate_id,
+            parent_id=draft.parent_id,
+            generation=draft.generation,
+            source=draft.source,
+            strategy=draft.strategy,
+            evaluation=evaluation,
+            score=score,
         )
+        archive.record_candidate(record)
+        if record.evaluation.passed and record.score > best_so_far.score:
+            best_so_far = record
 
     best = archive.best_candidate()
     if best is None or best.evaluation.stats is None:
@@ -128,4 +132,3 @@ def verify_run(run_dir: Union[str, Path]) -> Dict[str, Any]:
         json.dumps(response, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     return response
-
