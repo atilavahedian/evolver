@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -20,4 +22,3 @@ jobs:
       - run: uv run pytest
       - run: uv run evolver run levenshtein --attempts 4 --run-dir runs/ci-levenshtein
       - run: uv run evolver verify runs/ci-levenshtein
-
