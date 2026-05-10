@@ -1,0 +1,11 @@
+name: levenshtein
+entrypoint: solution.py
+function: levenshtein
+baseline: baseline.py
+tests: tests/test_correctness.py
+benchmark: benchmark.py
+goal: minimize_latency
+timeout_seconds: 8
+benchmark_repeats: 5
+seed: 13
+
