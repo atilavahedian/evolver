@@ -52,4 +52,4 @@ target-version = "py39"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["UP006", "UP007", "UP035"]
+ignore = ["B008", "UP006", "UP007", "UP035", "UP037", "UP045"]

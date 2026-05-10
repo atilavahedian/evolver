@@ -3,7 +3,6 @@ from pathlib import Path
 from evolver.runner import SandboxRunner
 from evolver.spec import load_problem
 
-
 FAST_LEVENSHTEIN = """
 def levenshtein(a, b):
     if a == b:

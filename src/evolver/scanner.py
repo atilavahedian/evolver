@@ -5,7 +5,6 @@ from typing import Iterable, List
 
 from evolver.types import ScanResult
 
-
 DANGEROUS_IMPORTS = {
     "builtins",
     "ctypes",

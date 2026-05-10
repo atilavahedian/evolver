@@ -5,9 +5,10 @@ import resource
 import shutil
 import subprocess
 import sys
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from evolver.benchmarking import parse_benchmark_output
 from evolver.scanner import scan_source
@@ -157,12 +158,9 @@ def _format_command(command: List[str]) -> str:
 
 def _resource_limiter(timeout_seconds: int):
     def limit() -> None:
-        try:
+        with suppress(OSError, ValueError):
             resource.setrlimit(resource.RLIMIT_CPU, (timeout_seconds + 1, timeout_seconds + 2))
-        except (OSError, ValueError):
-            pass
 
     if os.name == "posix":
         return limit
     return None
-

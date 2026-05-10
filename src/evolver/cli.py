@@ -13,7 +13,6 @@ from evolver.engine import run_evolution, verify_run
 from evolver.reports import load_summary, regenerate_report
 from evolver.spec import list_packaged_problems
 
-
 app = typer.Typer(no_args_is_help=True, help="Closed loop program search with verification.")
 console = Console()
 
@@ -41,21 +40,27 @@ def run(
 
 
 @app.command()
-def inspect(run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory.")) -> None:
+def inspect(
+    run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory."),
+) -> None:
     """Inspect the best candidate and lineage from a run."""
     summary = load_summary(run_dir)
     _print_summary(summary, run_dir)
 
 
 @app.command()
-def report(run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory.")) -> None:
+def report(
+    run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory."),
+) -> None:
     """Regenerate the HTML report from the SQLite archive and summary."""
     path = regenerate_report(run_dir)
     console.print(f"report: {path}")
 
 
 @app.command()
-def verify(run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory.")) -> None:
+def verify(
+    run_dir: Path = typer.Argument(..., help="Existing evidence bundle directory."),
+) -> None:
     """Rerun the winning candidate against the original test and benchmark gates."""
     result = verify_run(run_dir)
     console.print(json.dumps(result, indent=2, sort_keys=True))
@@ -77,4 +82,3 @@ def _print_summary(summary: dict, run_dir: Path) -> None:
 
 if __name__ == "__main__":
     app()
-

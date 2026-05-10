@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from evolver.spec import load_problem, list_packaged_problems
+from evolver.spec import list_packaged_problems, load_problem
 
 
 def test_loads_packaged_problem_with_resolved_paths():

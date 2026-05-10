@@ -42,7 +42,11 @@ def write_report(run_dir: Path, archive: Archive, summary: Dict[str, Any]) -> Pa
   <meta charset="utf-8">
   <title>Evolver Report {html.escape(summary["problem"])}</title>
   <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 40px; color: #111827; }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 40px;
+      color: #111827;
+    }}
     table {{ border-collapse: collapse; width: 100%; margin-top: 24px; }}
     th, td {{ border-bottom: 1px solid #d1d5db; padding: 8px; text-align: left; font-size: 14px; }}
     th {{ background: #f3f4f6; }}
@@ -84,4 +88,3 @@ def regenerate_report(run_dir: Path) -> Path:
     archive = Archive.open(run_dir / "archive.sqlite")
     summary = load_summary(run_dir)
     return write_report(run_dir, archive, summary)
-

@@ -4,7 +4,6 @@ import time
 
 from solution import levenshtein
 
-
 PAIRS = [
     ("benchmarking", "benchmarkers"),
     ("verification", "reification"),
