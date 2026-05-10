@@ -38,6 +38,9 @@ evolver = "evolver.cli:app"
 [tool.hatch.build.targets.wheel]
 packages = ["src/evolver"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"src/evolver/problems" = "evolver/problems"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
@@ -50,4 +53,3 @@ target-version = "py39"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["UP006", "UP007", "UP035"]
-
