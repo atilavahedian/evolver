@@ -1,0 +1,4 @@
+problem,seed,attempts_requested,attempts_evaluated,passing_candidates,candidate_pass_rate,best_candidate_id,best_strategy,baseline_mean_seconds,best_mean_seconds,speedup,improved,verified,run_dir
+levenshtein,2027,6,6,6,1.0,candidate-005,trimmed row dynamic programming,0.0013879748003091663,0.00027714179886970667,5.008175619736445,True,True,runs/levenshtein
+longest_unique_substring,2028,6,6,6,1.0,candidate-003,last-seen index map,0.006591024801309686,0.000491175199567806,13.418887613033494,True,True,runs/longest_unique_substring
+two_sum,2029,6,6,6,1.0,candidate-004,remaining complement set,0.04615964179829461,0.0002147000006516464,214.99600213410918,True,True,runs/two_sum
