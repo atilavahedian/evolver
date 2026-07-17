@@ -14,6 +14,7 @@ A candidate is only meaningful when these records exist:
 6. Environment fingerprint.
 7. Score and raw speedup.
 8. Winner rerun result.
+9. Requested and actually evaluated candidate budgets.
 
 ## Failure Handling
 
@@ -23,3 +24,4 @@ Unsafe candidates are archived as failures without execution. Candidates that pa
 
 The evidence bundle records the local interpreter, platform, command lines, benchmark samples, and winning source. It does not claim cross machine determinism. Timing claims are local to the recorded environment unless rerun elsewhere.
 
+The packaged deterministic library demonstrates the verifier and archive. It does not demonstrate candidate discovery, sample efficiency, or superiority over random/model-based search. Those claims require an injected search policy and a controlled comparison under equal candidate and compute budgets.
