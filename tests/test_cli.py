@@ -32,3 +32,27 @@ def test_cli_run_inspect_and_verify(tmp_path: Path):
     assert verify_result.exit_code == 0, verify_result.stdout
     assert "speedup" in inspect_result.stdout.lower()
     assert "verified" in verify_result.stdout.lower()
+
+
+def test_cli_runs_budget_normalized_suite(tmp_path: Path):
+    runner = CliRunner()
+    suite_dir = tmp_path / "cli-suite"
+
+    result = runner.invoke(
+        app,
+        [
+            "suite",
+            "--problems",
+            "two_sum,longest_unique_substring",
+            "--attempts",
+            "3",
+            "--suite-dir",
+            str(suite_dir),
+            "--seed",
+            "43",
+        ],
+    )
+
+    assert result.exit_code == 0, result.stdout
+    assert "geometric mean speedup" in result.stdout.lower()
+    assert (suite_dir / "suite_summary.json").exists()
