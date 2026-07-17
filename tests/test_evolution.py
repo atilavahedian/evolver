@@ -32,3 +32,12 @@ def test_verify_run_reruns_winning_candidate(tmp_path: Path):
     assert verification["candidate_id"] == "winner-rerun"
     assert verification["mean_seconds"] > 0
 
+
+def test_evolution_runs_across_packaged_problem_families(tmp_path: Path):
+    for problem in ["two_sum", "longest_unique_substring"]:
+        summary = run_evolution(problem, attempts=6, run_dir=tmp_path / problem, seed=31)
+
+        assert summary["problem"] == problem
+        assert summary["best_passed"]
+        assert summary["best_candidate_id"] != "baseline"
+        assert summary["speedup"] > 1.0

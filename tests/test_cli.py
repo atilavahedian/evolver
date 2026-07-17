@@ -12,6 +12,8 @@ def test_cli_lists_packaged_problems():
 
     assert result.exit_code == 0
     assert "levenshtein" in result.stdout
+    assert "longest_unique_substring" in result.stdout
+    assert "two_sum" in result.stdout
 
 
 def test_cli_run_inspect_and_verify(tmp_path: Path):
@@ -30,4 +32,3 @@ def test_cli_run_inspect_and_verify(tmp_path: Path):
     assert verify_result.exit_code == 0, verify_result.stdout
     assert "speedup" in inspect_result.stdout.lower()
     assert "verified" in verify_result.stdout.lower()
-

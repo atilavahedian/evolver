@@ -8,8 +8,7 @@ from evolver.types import CandidateDraft
 
 
 class CandidateGenerator(Protocol):
-    def generate(self, problem: ProblemSpec, attempts: int) -> List[CandidateDraft]:
-        ...
+    def generate(self, problem: ProblemSpec, attempts: int) -> List[CandidateDraft]: ...
 
 
 @dataclass(frozen=True)
@@ -17,9 +16,15 @@ class LibraryGenerator:
     """Deterministic program generator for reproducible local research runs."""
 
     def generate(self, problem: ProblemSpec, attempts: int) -> List[CandidateDraft]:
-        if problem.name != "levenshtein":
+        libraries = {
+            "levenshtein": _levenshtein_library,
+            "longest_unique_substring": _longest_unique_substring_library,
+            "two_sum": _two_sum_library,
+        }
+        library_factory = libraries.get(problem.name)
+        if library_factory is None:
             raise ValueError(f"no packaged generator for {problem.name}")
-        library = _levenshtein_library()
+        library = library_factory()
         drafts = []
         parent = "baseline"
         for index, (strategy, source) in enumerate(library[:attempts], start=1):
@@ -196,3 +201,203 @@ def levenshtein(a, b):
         ),
     ]
 
+
+def _two_sum_library() -> List[tuple[str, str]]:
+    return [
+        (
+            "sorted two-pointer scan",
+            """
+def has_pair_sum(values, target):
+    ordered = sorted(values)
+    left = 0
+    right = len(ordered) - 1
+    while left < right:
+        total = ordered[left] + ordered[right]
+        if total == target:
+            return True
+        if total < target:
+            left += 1
+        else:
+            right -= 1
+    return False
+""".strip()
+            + "\n",
+        ),
+        (
+            "incremental seen list",
+            """
+def has_pair_sum(values, target):
+    seen = []
+    for value in values:
+        if target - value in seen:
+            return True
+        seen.append(value)
+    return False
+""".strip()
+            + "\n",
+        ),
+        (
+            "incremental hash set",
+            """
+def has_pair_sum(values, target):
+    seen = set()
+    for value in values:
+        if target - value in seen:
+            return True
+        seen.add(value)
+    return False
+""".strip()
+            + "\n",
+        ),
+        (
+            "remaining complement set",
+            """
+def has_pair_sum(values, target):
+    needed = set()
+    for value in values:
+        if value in needed:
+            return True
+        needed.add(target - value)
+    return False
+""".strip()
+            + "\n",
+        ),
+        (
+            "frequency map",
+            """
+def has_pair_sum(values, target):
+    counts = {}
+    for value in values:
+        counts[value] = counts.get(value, 0) + 1
+    for value, count in counts.items():
+        complement = target - value
+        if complement != value and complement in counts:
+            return True
+        if complement == value and count > 1:
+            return True
+    return False
+""".strip()
+            + "\n",
+        ),
+        (
+            "indexed complement lookup",
+            """
+def has_pair_sum(values, target):
+    first_index = {}
+    for index, value in enumerate(values):
+        complement = target - value
+        if complement in first_index and first_index[complement] != index:
+            return True
+        if value not in first_index:
+            first_index[value] = index
+    return False
+""".strip()
+            + "\n",
+        ),
+    ]
+
+
+def _longest_unique_substring_library() -> List[tuple[str, str]]:
+    return [
+        (
+            "restart on duplicate",
+            """
+def longest_unique_substring(text):
+    best = 0
+    for start in range(len(text)):
+        seen = set()
+        for end in range(start, len(text)):
+            character = text[end]
+            if character in seen:
+                break
+            seen.add(character)
+            best = max(best, end - start + 1)
+    return best
+""".strip()
+            + "\n",
+        ),
+        (
+            "moving substring window",
+            """
+def longest_unique_substring(text):
+    window = ""
+    best = 0
+    for character in text:
+        duplicate = window.find(character)
+        if duplicate >= 0:
+            window = window[duplicate + 1:]
+        window += character
+        best = max(best, len(window))
+    return best
+""".strip()
+            + "\n",
+        ),
+        (
+            "last-seen index map",
+            """
+def longest_unique_substring(text):
+    last_seen = {}
+    window_start = 0
+    best = 0
+    for index, character in enumerate(text):
+        previous = last_seen.get(character, -1)
+        if previous >= window_start:
+            window_start = previous + 1
+        last_seen[character] = index
+        best = max(best, index - window_start + 1)
+    return best
+""".strip()
+            + "\n",
+        ),
+        (
+            "sliding hash-set window",
+            """
+def longest_unique_substring(text):
+    seen = set()
+    left = 0
+    best = 0
+    for right, character in enumerate(text):
+        while character in seen:
+            seen.remove(text[left])
+            left += 1
+        seen.add(character)
+        best = max(best, right - left + 1)
+    return best
+""".strip()
+            + "\n",
+        ),
+        (
+            "bounded last-seen map",
+            """
+def longest_unique_substring(text):
+    last_seen = {}
+    left = 0
+    best = 0
+    for right in range(len(text)):
+        character = text[right]
+        if character in last_seen:
+            left = max(left, last_seen[character] + 1)
+        last_seen[character] = right
+        length = right - left + 1
+        if length > best:
+            best = length
+    return best
+""".strip()
+            + "\n",
+        ),
+        (
+            "one-based last-seen map",
+            """
+def longest_unique_substring(text):
+    next_start = {}
+    start = 0
+    best = 0
+    for index, character in enumerate(text):
+        start = max(start, next_start.get(character, 0))
+        best = max(best, index - start + 1)
+        next_start[character] = index + 1
+    return best
+""".strip()
+            + "\n",
+        ),
+    ]
