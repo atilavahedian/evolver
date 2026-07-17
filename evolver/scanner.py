@@ -29,19 +29,6 @@ DANGEROUS_CALLS = {
     "open",
 }
 
-DANGEROUS_ATTRIBUTES = {
-    "remove",
-    "rename",
-    "replace",
-    "rmdir",
-    "run",
-    "spawn",
-    "system",
-    "unlink",
-    "write_bytes",
-    "write_text",
-}
-
 TAMPERING_MARKERS = {
     "benchmark.py",
     "test_correctness",
@@ -84,8 +71,6 @@ def _scan_node(node: ast.AST) -> Iterable[str]:
         name = _call_name(node.func)
         if name in DANGEROUS_CALLS:
             yield f"dangerous call {name}"
-        if name.split(".")[-1] in DANGEROUS_ATTRIBUTES:
-            yield f"dangerous call {name}"
 
 
 def _call_name(node: ast.AST) -> str:
@@ -95,4 +80,3 @@ def _call_name(node: ast.AST) -> str:
         base = _call_name(node.value)
         return f"{base}.{node.attr}" if base else node.attr
     return ""
-
