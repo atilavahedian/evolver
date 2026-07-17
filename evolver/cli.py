@@ -72,7 +72,12 @@ def _print_summary(summary: dict, run_dir: Path) -> None:
     table.add_column("value")
     table.add_row("run_dir", str(run_dir))
     table.add_row("problem", str(summary["problem"]))
-    table.add_row("attempts", str(summary["attempts"]))
+    table.add_row(
+        "candidate budget",
+        f"{summary.get('attempts_evaluated', summary['attempts'])} / "
+        f"{summary.get('attempts_requested', summary['attempts'])}",
+    )
+    table.add_row("passing candidates", str(summary.get("passing_candidates", "unknown")))
     table.add_row("best_candidate", str(summary["best_candidate_id"]))
     table.add_row("best_strategy", str(summary["best_strategy"]))
     table.add_row("speedup", f"{summary['speedup']:.4f}x")

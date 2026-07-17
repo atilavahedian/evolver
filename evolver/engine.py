@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional, Union
 
 from evolver.archive import Archive
 from evolver.environment import write_environment
-from evolver.generators import LibraryGenerator
+from evolver.generators import CandidateGenerator, LibraryGenerator
 from evolver.reports import write_report, write_summary
 from evolver.runner import SandboxRunner
 from evolver.scoring import score_evaluation, speedup_against
@@ -21,6 +21,7 @@ def run_evolution(
     attempts: int,
     run_dir: Union[str, Path],
     seed: Optional[int] = None,
+    generator: Optional[CandidateGenerator] = None,
 ) -> Dict[str, Any]:
     problem = load_problem(problem_reference)
     if attempts < 1:
@@ -49,11 +50,14 @@ def run_evolution(
     )
     archive.record_candidate(baseline_record)
 
-    generator = LibraryGenerator()
+    selected_generator = generator or LibraryGenerator()
+    drafts = selected_generator.generate(problem, attempts)
     best_so_far = baseline_record
-    for draft in generator.generate(problem, attempts):
+    passing_candidates = 0
+    for draft in drafts:
         draft = replace(draft, parent_id=best_so_far.candidate_id)
         evaluation = runner.evaluate(draft.candidate_id, draft.source)
+        passing_candidates += int(evaluation.passed)
         score = score_evaluation(baseline_eval.stats, evaluation, draft.source)
         record = CandidateRecord(
             candidate_id=draft.candidate_id,
@@ -77,7 +81,12 @@ def run_evolution(
     summary: Dict[str, Any] = {
         "problem": problem.name,
         "attempts": attempts,
+        "attempts_requested": attempts,
+        "attempts_evaluated": len(drafts),
+        "passing_candidates": passing_candidates,
+        "candidate_pass_rate": passing_candidates / len(drafts) if drafts else 0.0,
         "seed": problem.seed if seed is None else seed,
+        "generator": _generator_name(selected_generator),
         "baseline_candidate_id": "baseline",
         "baseline_mean_seconds": baseline_eval.stats.mean_seconds,
         "best_candidate_id": best.candidate_id,
@@ -95,7 +104,10 @@ def run_evolution(
             {
                 "problem": problem.name,
                 "attempts": attempts,
+                "attempts_requested": attempts,
+                "attempts_evaluated": len(drafts),
                 "seed": summary["seed"],
+                "generator": summary["generator"],
                 "entrypoint": problem.entrypoint,
                 "function": problem.function,
                 "goal": problem.goal,
@@ -132,3 +144,10 @@ def verify_run(run_dir: Union[str, Path]) -> Dict[str, Any]:
         json.dumps(response, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     return response
+
+
+def _generator_name(generator: CandidateGenerator) -> str:
+    name = getattr(generator, "name", None)
+    if isinstance(name, str) and name:
+        return name
+    return generator.__class__.__name__

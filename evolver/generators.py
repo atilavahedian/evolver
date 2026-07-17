@@ -15,6 +15,8 @@ class CandidateGenerator(Protocol):
 class LibraryGenerator:
     """Deterministic program generator for reproducible local research runs."""
 
+    name: str = "packaged-library"
+
     def generate(self, problem: ProblemSpec, attempts: int) -> List[CandidateDraft]:
         libraries = {
             "levenshtein": _levenshtein_library,
