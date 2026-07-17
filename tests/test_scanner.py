@@ -48,3 +48,15 @@ def levenshtein(a, b):
     assert not result.safe
     assert "benchmark tampering marker benchmark.py" in result.findings
 
+
+def test_allows_safe_methods_that_share_names_with_filesystem_operations():
+    source = """
+def normalize(values, text):
+    values.remove(None)
+    return text.replace("-", "_")
+"""
+
+    result = scan_source(source)
+
+    assert result.safe
+    assert result.findings == []

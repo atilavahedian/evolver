@@ -17,7 +17,7 @@ The tests define semantic validity. The benchmark defines the measured objective
 
 ## Candidate Generation
 
-`LibraryGenerator` is deterministic and packaged so the project runs without network access. It is intentionally shaped like a generator protocol, which means an external model backed generator can be added without changing the engine.
+`LibraryGenerator` is deterministic and packaged so the project runs without network access. `run_evolution` accepts the `CandidateGenerator` protocol, so an external model-backed generator can be evaluated without changing the verifier or archive.
 
 Every generated candidate has:
 
@@ -31,11 +31,13 @@ strategy
 
 That is enough to reconstruct lineage.
 
-During a run, each new candidate is attached to the best passing candidate known so far. This makes the local deterministic run evidence guided: later candidates inherit from measured winners rather than from unverified proposals.
+During a run, each new candidate is attached to the best passing candidate known so far. In the packaged deterministic fixture this is attribution lineage: the fixed sources do not mutate their recorded parent. A generator that uses parent source or evidence can implement actual iterative search through the same protocol.
 
 ## Verification Runtime
 
-`SandboxRunner` scans source before execution. Accepted candidates are copied into fresh workspaces under the run directory. Tests execute before benchmarks. A candidate with failing tests never receives a performance score.
+`SandboxRunner` scans source before execution. Accepted candidates are copied into fresh workspaces under the run directory and run in subprocesses with time and CPU limits. Tests execute before benchmarks. A candidate with failing tests never receives a performance score.
+
+This runner is a reproducible evaluation boundary, not a hardened security sandbox. The scanner rejects known dangerous imports, dynamic execution, and benchmark-tampering markers, but untrusted model output should still run inside an OS-level sandbox or isolated container.
 
 The runner records:
 
@@ -72,3 +74,7 @@ verification.json
 ```
 
 `verify` reruns the winning source from `best_solution.py` against the original problem.
+
+## Suite Aggregation
+
+`run_suite` applies the same requested budget to each selected problem, assigns deterministic per-problem seeds, executes `verify_run` for every winner, and writes `suite_summary.json` plus `suite_results.csv`. Geometric-mean speedup prevents one large ratio from dominating the aggregate as strongly as an arithmetic mean would.

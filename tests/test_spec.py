@@ -19,7 +19,11 @@ def test_loads_packaged_problem_with_resolved_paths():
 
 
 def test_lists_packaged_problems():
-    assert "levenshtein" in list_packaged_problems()
+    assert list_packaged_problems() == [
+        "levenshtein",
+        "longest_unique_substring",
+        "two_sum",
+    ]
 
 
 def test_rejects_problem_specs_that_point_outside_problem_dir(tmp_path: Path):
@@ -49,4 +53,3 @@ def test_rejects_problem_specs_that_point_outside_problem_dir(tmp_path: Path):
         assert "inside the problem directory" in str(exc)
     else:
         raise AssertionError("unsafe spec path was accepted")
-
